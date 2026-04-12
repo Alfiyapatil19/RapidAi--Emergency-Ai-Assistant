@@ -1,0 +1,69 @@
+{% extends "admin/base.html" %}
+{% block title %}All Users{% endblock %}
+{% block page_title %}All Users{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>Registered Users</h2>
+  <p>View, search and manage all registered users</p>
+</div>
+
+<!-- SEARCH -->
+<form method="GET" action="/admin/users">
+  <div class="search-bar">
+    <input type="text" name="search" class="search-input"
+           placeholder="Search by name or email..."
+           value="{{ search }}"/>
+    <button type="submit" class="btn-search">Search</button>
+    {% if search %}
+    <a href="/admin/users" class="btn-view" style="padding:10px 16px;">Clear</a>
+    {% endif %}
+  </div>
+</form>
+
+<!-- USERS TABLE -->
+<div class="table-wrap">
+  <div class="table-header">
+    <div class="table-title">
+      {{ users|length }} user(s)
+      {% if search %} found for "{{ search }}"{% endif %}
+    </div>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Contacts</th>
+        <th>History</th>
+        <th>Registered</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in users %}
+      <tr>
+        <td>{{ u.id }}</td>
+        <td><strong>{{ u.name }}</strong></td>
+        <td>{{ u.email }}</td>
+        <td><span class="badge badge-blue">{{ u.contact_count }}</span></td>
+        <td><span class="badge badge-green">{{ u.history_count }}</span></td>
+        <td>{{ u.created_at }}</td>
+        <td style="display:flex;gap:6px;">
+          <a href="/admin/users/{{ u.id }}" class="btn-view">View</a>
+          <form method="POST" action="/admin/users/{{ u.id }}/delete"
+                onsubmit="return confirm('Delete user {{ u.name }}? This cannot be undone.')">
+            <button type="submit" class="btn-delete">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="empty-row">
+        {% if search %}No users found for "{{ search }}"{% else %}No users registered yet.{% endif %}
+      </td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

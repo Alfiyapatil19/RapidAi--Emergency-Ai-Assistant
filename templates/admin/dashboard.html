@@ -1,0 +1,94 @@
+{% extends "admin/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>Welcome back, Admin 👋</h2>
+  <p>Overview of all RapidAid activity</p>
+</div>
+
+<!-- STATS -->
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-card-icon">👥</div>
+    <div class="stat-card-num">{{ total_users }}</div>
+    <div class="stat-card-label">Total Users</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card-icon">📞</div>
+    <div class="stat-card-num">{{ total_contacts }}</div>
+    <div class="stat-card-label">Saved Contacts</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card-icon">📋</div>
+    <div class="stat-card-num">{{ total_history }}</div>
+    <div class="stat-card-label">Aid Sessions</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card-icon">🚨</div>
+    <div class="stat-card-num">{{ total_panics }}</div>
+    <div class="stat-card-label">Panic Events</div>
+  </div>
+</div>
+
+<!-- RECENT USERS -->
+<div class="table-wrap">
+  <div class="table-header">
+    <div class="table-title">Recent Registrations</div>
+    <a href="/admin/users" class="btn-view">View All →</a>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Registered</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in recent_users %}
+      <tr>
+        <td>{{ u.id }}</td>
+        <td><strong>{{ u.name }}</strong></td>
+        <td>{{ u.email }}</td>
+        <td>{{ u.created_at }}</td>
+        <td><a href="/admin/users/{{ u.id }}" class="btn-view">View</a></td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="empty-row">No users registered yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- RECENT PANICS -->
+<div class="table-wrap">
+  <div class="table-header">
+    <div class="table-title">Recent Panic Events 🚨</div>
+    <a href="/admin/panic-logs" class="btn-view">View All →</a>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Action</th>
+        <th>Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in recent_panics %}
+      <tr>
+        <td><strong>{{ p.user_name }}</strong></td>
+        <td>{{ p.action }}</td>
+        <td>{{ p.created_at }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="3" class="empty-row">No panic events yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

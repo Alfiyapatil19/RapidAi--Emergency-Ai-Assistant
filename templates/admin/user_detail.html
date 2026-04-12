@@ -1,0 +1,113 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ user.name }}{% endblock %}
+{% block page_title %}User Detail{% endblock %}
+
+{% block content %}
+<a href="/admin/users" class="back-btn">← Back to Users</a>
+
+<div class="page-header">
+  <h2>{{ user.name }}</h2>
+  <p>{{ user.email }}</p>
+</div>
+
+<!-- USER INFO -->
+<div class="info-grid">
+  <div class="info-card">
+    <div class="info-label">Full Name</div>
+    <div class="info-value">{{ user.name }}</div>
+  </div>
+  <div class="info-card">
+    <div class="info-label">Email</div>
+    <div class="info-value">{{ user.email }}</div>
+  </div>
+  <div class="info-card">
+    <div class="info-label">User ID</div>
+    <div class="info-value">#{{ user.id }}</div>
+  </div>
+  <div class="info-card">
+    <div class="info-label">Registered On</div>
+    <div class="info-value">{{ user.created_at }}</div>
+  </div>
+</div>
+
+<!-- SAVED CONTACTS -->
+<div class="table-wrap" style="margin-bottom:24px;">
+  <div class="table-header">
+    <div class="table-title">📞 Saved Contacts ({{ contacts|length }})</div>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Relation</th>
+        <th>Phone</th>
+        <th>Added On</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in contacts %}
+      <tr>
+        <td><strong>{{ c.name }}</strong></td>
+        <td><span class="badge badge-blue">{{ c.relation }}</span></td>
+        <td>{{ c.phone }}</td>
+        <td>{{ c.created_at }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" class="empty-row">No contacts saved by this user.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- HISTORY -->
+<div class="table-wrap">
+  <div class="table-header">
+    <div class="table-title">📋 Aid History ({{ history|length }})</div>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Emergency Type</th>
+        <th>Action</th>
+        <th>Language</th>
+        <th>Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for h in history %}
+      <tr>
+        <td>
+          {% if h.emergency_type == 'PANIC_MODE' %}
+          <span class="badge badge-red">🚨 Panic Mode</span>
+          {% else %}
+          <strong>{{ h.emergency_type | capitalize }}</strong>
+          {% endif %}
+        </td>
+        <td>{{ h.action }}</td>
+        <td>
+          {% if h.language == 'hi' %}<span class="badge badge-amber">हिन्दी</span>
+          {% elif h.language == 'mr' %}<span class="badge badge-amber">मराठी</span>
+          {% else %}<span class="badge badge-green">English</span>
+          {% endif %}
+        </td>
+        <td>{{ h.created_at }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" class="empty-row">No history for this user.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- DELETE USER -->
+<div style="margin-top:20px; padding:20px; background:rgba(232,49,42,0.05); border:1px solid rgba(232,49,42,0.15); border-radius:12px;">
+  <strong style="color:#E8312A;">Danger Zone</strong>
+  <p style="color:#9EA3B8; font-size:13px; margin:6px 0 14px;">Deleting this user will remove all their contacts and history permanently.</p>
+  <form method="POST" action="/admin/users/{{ user.id }}/delete"
+        onsubmit="return confirm('Are you sure? This cannot be undone.')">
+    <button type="submit" class="btn-delete" style="padding:9px 20px; font-size:13px;">
+      🗑️ Delete User
+    </button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "admin/base.html" %}
+{% block title %}Panic Logs{% endblock %}
+{% block page_title %}Panic Logs{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>🚨 Panic Event Logs</h2>
+  <p>All panic mode triggers across all users</p>
+</div>
+
+<div class="table-wrap">
+  <div class="table-header">
+    <div class="table-title">{{ logs|length }} panic event(s) total</div>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>User</th>
+        <th>Email</th>
+        <th>Action</th>
+        <th>Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for l in logs %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td><strong>{{ l.user_name }}</strong></td>
+        <td>{{ l.user_email }}</td>
+        <td>
+          {% if 'SMS sent' in l.action %}
+          <span class="badge badge-green">✅ {{ l.action }}</span>
+          {% elif 'Simulated' in l.action %}
+          <span class="badge badge-amber">⚠️ {{ l.action }}</span>
+          {% else %}
+          <span class="badge badge-red">🚨 {{ l.action }}</span>
+          {% endif %}
+        </td>
+        <td>{{ l.created_at }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="empty-row">No panic events recorded yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

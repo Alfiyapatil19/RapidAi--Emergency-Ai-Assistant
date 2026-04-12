@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Admin{% endblock %} — RapidAid</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Outfit', sans-serif; background: #0D0E12; color: #EDEEF2; display: flex; min-height: 100vh; font-size: 14px; }
+
+/* SIDEBAR */
+.aside {
+  width: 220px; min-width: 220px;
+  background: #13141A;
+  border-right: 1px solid rgba(255,255,255,0.07);
+  display: flex; flex-direction: column;
+  position: sticky; top: 0; height: 100vh;
+}
+.aside-logo {
+  display: flex; align-items: center; gap: 10px;
+  padding: 20px 18px; border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.aside-logo-mark {
+  width: 34px; height: 34px; background: #E8312A;
+  border-radius: 9px; display: flex; align-items: center;
+  justify-content: center; font-size: 18px;
+  box-shadow: 0 4px 12px rgba(232,49,42,0.4);
+}
+.aside-logo-text strong { display: block; font-size: 14px; font-weight: 800; }
+.aside-logo-text span   { font-size: 10px; color: #565C7A; }
+.aside-nav { padding: 12px; flex: 1; }
+.nav-label { font-size: 10px; font-weight: 700; color: #565C7A; letter-spacing: 1.2px; padding: 6px 8px; }
+.nav-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 9px 12px; border-radius: 9px;
+  color: #9EA3B8; font-size: 13px; font-weight: 500;
+  text-decoration: none; margin-bottom: 2px;
+  transition: all 0.18s;
+}
+.nav-item:hover { background: #191B23; color: #EDEEF2; }
+.nav-item.active { background: #21232E; color: #EDEEF2; border: 1px solid rgba(255,255,255,0.08); }
+.nav-item.active .nav-icon { color: #E8312A; }
+.nav-icon { font-size: 15px; }
+.aside-bottom {
+  padding: 12px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+.btn-logout {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; padding: 9px 12px;
+  background: rgba(232,49,42,0.1);
+  border: 1px solid rgba(232,49,42,0.2);
+  border-radius: 9px; color: #E8312A;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px; font-weight: 600;
+  cursor: pointer; text-decoration: none;
+  transition: all 0.2s;
+}
+.btn-logout:hover { background: rgba(232,49,42,0.2); }
+
+/* MAIN */
+.main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 28px; height: 58px;
+  background: #13141A;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  position: sticky; top: 0; z-index: 100;
+}
+.topbar-title { font-size: 15px; font-weight: 700; }
+.topbar-badge {
+  background: rgba(232,49,42,0.12);
+  border: 1px solid rgba(232,49,42,0.25);
+  color: #E8312A; padding: 4px 12px;
+  border-radius: 20px; font-size: 12px; font-weight: 600;
+}
+.content { padding: 28px 32px; flex: 1; overflow-y: auto; }
+
+/* CARDS */
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+.stat-card {
+  background: #191B23; border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px; padding: 20px;
+}
+.stat-card-icon { font-size: 28px; margin-bottom: 10px; }
+.stat-card-num  { font-size: 28px; font-weight: 800; margin-bottom: 4px; }
+.stat-card-label { font-size: 12px; color: #9EA3B8; }
+
+/* TABLE */
+.table-wrap {
+  background: #191B23; border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px; overflow: hidden; margin-bottom: 24px;
+}
+.table-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.table-title { font-size: 14px; font-weight: 700; }
+table { width: 100%; border-collapse: collapse; }
+th {
+  text-align: left; padding: 11px 20px;
+  font-size: 11px; font-weight: 700; color: #565C7A;
+  text-transform: uppercase; letter-spacing: 0.8px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  background: #13141A;
+}
+td {
+  padding: 13px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 13px; color: #9EA3B8;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255,255,255,0.02); }
+td strong { color: #EDEEF2; font-weight: 600; }
+
+/* BADGES */
+.badge {
+  display: inline-block; padding: 3px 10px;
+  border-radius: 20px; font-size: 11px; font-weight: 600;
+}
+.badge-red    { background: rgba(232,49,42,0.1);  color: #E8312A; border: 1px solid rgba(232,49,42,0.2); }
+.badge-green  { background: rgba(34,214,122,0.1); color: #22D67A; border: 1px solid rgba(34,214,122,0.2); }
+.badge-blue   { background: rgba(59,158,255,0.1); color: #3B9EFF; border: 1px solid rgba(59,158,255,0.2); }
+.badge-amber  { background: rgba(245,166,35,0.1); color: #F5A623; border: 1px solid rgba(245,166,35,0.2); }
+
+/* BUTTONS */
+.btn-view {
+  padding: 5px 12px; background: #21232E;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 7px; color: #9EA3B8;
+  font-family: 'Outfit', sans-serif; font-size: 12px;
+  text-decoration: none; transition: all 0.2s; cursor: pointer;
+}
+.btn-view:hover { color: #EDEEF2; border-color: rgba(255,255,255,0.15); }
+.btn-delete {
+  padding: 5px 12px; background: rgba(232,49,42,0.08);
+  border: 1px solid rgba(232,49,42,0.2);
+  border-radius: 7px; color: #E8312A;
+  font-family: 'Outfit', sans-serif; font-size: 12px;
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-delete:hover { background: rgba(232,49,42,0.15); }
+
+/* SEARCH */
+.search-bar {
+  display: flex; gap: 10px; margin-bottom: 20px;
+}
+.search-input {
+  flex: 1; padding: 10px 14px;
+  background: #191B23; border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px; color: #EDEEF2;
+  font-family: 'Outfit', sans-serif; font-size: 14px; outline: none;
+}
+.search-input:focus { border-color: #E8312A; }
+.btn-search {
+  padding: 10px 20px; background: #E8312A;
+  border: none; border-radius: 10px; color: white;
+  font-family: 'Outfit', sans-serif; font-weight: 600;
+  font-size: 14px; cursor: pointer;
+}
+
+/* PAGE HEADER */
+.page-header { margin-bottom: 24px; }
+.page-header h2 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+.page-header p  { font-size: 13px; color: #9EA3B8; }
+
+/* SECTION */
+.section-title { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+.info-card {
+  background: #191B23; border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px; padding: 16px;
+}
+.info-label { font-size: 11px; color: #565C7A; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
+.info-value { font-size: 15px; font-weight: 600; }
+.back-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: #9EA3B8; text-decoration: none; font-size: 13px;
+  margin-bottom: 20px; transition: color 0.2s;
+}
+.back-btn:hover { color: #EDEEF2; }
+.empty-row td { text-align: center; padding: 40px; color: #565C7A; }
+</style>
+</head>
+<body>
+
+<aside class="aside">
+  <div class="aside-logo">
+    <div class="aside-logo-mark">🚑</div>
+    <div class="aside-logo-text">
+      <strong>RapidAid</strong>
+      <span>Admin Panel</span>
+    </div>
+  </div>
+  <nav class="aside-nav">
+    <div class="nav-label">MENU</div>
+    <a href="/admin/dashboard" class="nav-item {% if request.endpoint == 'admin.dashboard' %}active{% endif %}">
+      <span class="nav-icon">📊</span> Dashboard
+    </a>
+    <a href="/admin/users" class="nav-item {% if request.endpoint == 'admin.users' or request.endpoint == 'admin.user_detail' %}active{% endif %}">
+      <span class="nav-icon">👥</span> All Users
+    </a>
+    <a href="/admin/panic-logs" class="nav-item {% if request.endpoint == 'admin.panic_logs' %}active{% endif %}">
+      <span class="nav-icon">🚨</span> Panic Logs
+    </a>
+    <div class="nav-label" style="margin-top:16px;">APP</div>
+    <a href="/" class="nav-item" target="_blank">
+      <span class="nav-icon">🌐</span> View App
+    </a>
+  </nav>
+  <div class="aside-bottom">
+    <a href="/admin/logout" class="btn-logout">🚪 Logout</a>
+  </div>
+</aside>
+
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-title">{% block page_title %}Dashboard{% endblock %}</div>
+    <div class="topbar-badge">🔐 Admin: {{ session.admin_user }}</div>
+  </header>
+  <div class="content">
+    {% block content %}{% endblock %}
+  </div>
+</main>
+
+</body>
+</html>
