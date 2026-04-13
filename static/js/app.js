@@ -458,8 +458,9 @@ async function renderContacts() {
   }
   try {
     const data = await API.getContacts();
-    if (data.success) state.contacts = data.contacts;
-  } catch {}
+    if (data.success) { state.contacts = data.contacts || []; }
+    else { console.error("Error fetching contacts:", data.message); }
+  } catch(e) { console.error("Server fetch failed:", e); }
   drawContacts();
 }
 
@@ -508,10 +509,18 @@ async function addContact() {
 }
 
 async function removeContact(id) {
-  try { await API.deleteContact(id); } catch {}
-  state.contacts = state.contacts.filter(c => c.id !== id);
-  drawContacts();
-  showToast("🗑️ Contact removed");
+  try { 
+    const data = await API.deleteContact(id); 
+    if (data.success) {
+      state.contacts = state.contacts.filter(c => c.id !== id);
+      drawContacts();
+      showToast("🗑️ Contact removed");
+    } else {
+      showToast("⚠️ Could not remove: " + data.message);
+    }
+  } catch(e) {
+    showToast("❌ Server error: failed to remove contact.");
+  }
 }
 
 function updateContactsBadge() {
@@ -531,8 +540,8 @@ async function renderHistory() {
   if (!state.user) return;
   try {
     const data = await API.getHistory();
-    if (data.success && data.history.length > 0) state.history = data.history;
-  } catch {}
+    if (data.success) { state.history = data.history || []; }
+  } catch(e) { console.error("History fetch failed", e); }
   drawHistory();
 }
 
@@ -569,10 +578,16 @@ function drawHistory() {
 }
 
 async function clearHistory() {
-  try { await API.clearHistory(); } catch {}
-  state.history = [];
-  drawHistory();
-  showToast("🗑️ History cleared");
+  try { 
+    const data = await API.clearHistory(); 
+    if (data.success) {
+      state.history = [];
+      drawHistory();
+      showToast("🗑️ History cleared");
+    } else {
+      showToast("⚠️ Could not clear: " + data.message);
+    }
+  } catch(e) {  showToast("❌ Server error: failed to clear history."); }
 }
 
 // ── LANGUAGE ─────────────────────────────────────────────
