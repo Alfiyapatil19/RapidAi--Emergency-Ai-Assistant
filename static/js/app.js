@@ -423,7 +423,7 @@ function loginSuccess(name) {
 }
 
 function renderUserLoggedIn(name) {
-  const chip = `<div class="user-chip" onclick="doLogout()" title="Click to logout"><div class="user-avatar">${name[0].toUpperCase()}</div>${name.split(" ")[0]}</div>`;
+  const chip = `<div class="user-chip" onclick="doLogout()" title="Click to logout"><div class="user-avatar">${name[0].toUpperCase()}</div>${name.split(" ")[0]} <span style="color:var(--red); margin-left:6px; font-size:11px; font-weight:700; text-transform:uppercase;">Logout</span></div>`;
   const el1 = document.getElementById("auth-topbar");
   const el2 = document.getElementById("auth-sidebar");
   if (el1) el1.innerHTML = chip;
