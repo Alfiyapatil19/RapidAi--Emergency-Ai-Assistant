@@ -177,14 +177,11 @@ def get_ai_chat_response(user_message: str, emergency_context: str = "", lang: s
 
 {ctx_part}
 
-IMPORTANT:
-- If user asks about a NEW emergency, ignore previous context
-- Answer only based on user question
-- IF the user asks you to generate, show, or draw an image/picture, YOU MUST include this exact tag anywhere in your response: [GENERATE_IMAGE: <short description>]
-
-Answer in {lang_name}.
-Be short (2-4 sentences), clear, and medically helpful.
-Always suggest calling 108/112 for serious conditions.
+CRITICAL RULES:
+1. If the user explicitly asks for an image, a picture, or a drawing (e.g. "show me an image", "generate image", "draw it"), YOU ARE FULLY CAPABLE OF GENERATING IMAGES. 
+2. You MUST NOT say "I cannot generate images" or "I don't have the ability". You actually DO have the ability!
+3. To generate the image, you MUST include the exact tag anywhere in your text: [GENERATE_IMAGE: <short visual description of the medical procedure>]
+4. Answer concisely in {lang_name} (2-4 sentences max). Always suggest calling 108/112 for severe emergencies.
 
 User: {user_message}
 """
