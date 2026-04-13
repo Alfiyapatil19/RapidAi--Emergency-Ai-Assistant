@@ -506,6 +506,7 @@ body {
 .contacts-list-col, .contacts-form-col {
   background: var(--surface); border: 1px solid var(--border);
   border-radius: 16px; padding: 22px;
+  position: relative; z-index: 10; pointer-events: auto !important;
 }
 .contact-item {
   display: flex; align-items: center; gap: 14px;
