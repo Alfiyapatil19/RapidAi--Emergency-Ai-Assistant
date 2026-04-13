@@ -7,3 +7,4 @@ requests==2.32.3
 PyMySQL==1.1.1
 twilio==9.3.6
 cryptography==42.0.8
+gunicorn==21.2.0
