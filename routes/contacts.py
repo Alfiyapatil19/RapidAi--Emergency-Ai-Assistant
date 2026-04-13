@@ -58,8 +58,8 @@ def add_contact():
         "INSERT INTO contacts (user_id, name, relation, phone) VALUES (%s, %s, %s, %s) RETURNING id",
         (session["user_id"], name, relation, phone)
     )
-    db.commit()
     new_id = cursor.fetchone()["id"]
+    db.commit()
     cursor.close()
 
     return jsonify({"success": True, "message": "Contact added!", "id": new_id})

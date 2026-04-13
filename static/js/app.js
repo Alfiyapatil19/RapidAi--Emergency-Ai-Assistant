@@ -386,7 +386,7 @@ async function doLogin() {
     const data = await API.login(email, pass);
     if (data.success) { loginSuccess(data.name); }
     else { showErr(errEl, data.message); btn.disabled=false; btn.textContent="Login"; }
-  } catch { demoLogin(); }
+  } catch(e) { showErr(errEl, "Server error: " + e.message); btn.disabled=false; btn.textContent="Login"; }
 }
 
 async function doSignup() {
@@ -403,7 +403,7 @@ async function doSignup() {
     const data = await API.register(name, email, pass);
     if (data.success) { loginSuccess(data.name); }
     else { showErr(errEl, data.message); btn.disabled=false; btn.textContent="Create Account"; }
-  } catch { demoLogin(); }
+  } catch(e) { showErr(errEl, "Server error: " + e.message); btn.disabled=false; btn.textContent="Create Account"; }
 }
 
 function demoLogin() {
@@ -493,14 +493,18 @@ async function addContact() {
   if (!name||!phone) { showToast("⚠️ Name and phone are required"); return; }
   try {
     const data = await API.addContact(name, rel, phone);
-    state.contacts.push({ id: data.id || Date.now(), name, relation: rel, phone });
-  } catch {
-    state.contacts.push({ id: Date.now(), name, relation: rel, phone });
+    if (data.success) {
+      state.contacts.push({ id: data.id || Date.now(), name, relation: rel, phone });
+      document.getElementById("c-name").value  = "";
+      document.getElementById("c-phone").value = "";
+      drawContacts();
+      showToast("✅ Contact added!");
+    } else {
+      showToast("⚠️ " + data.message);
+    }
+  } catch(e) {
+    showToast("❌ Server error: " + e.message);
   }
-  document.getElementById("c-name").value  = "";
-  document.getElementById("c-phone").value = "";
-  drawContacts();
-  showToast("✅ Contact added!");
 }
 
 async function removeContact(id) {

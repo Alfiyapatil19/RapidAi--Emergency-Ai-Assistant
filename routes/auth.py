@@ -38,8 +38,8 @@ def register():
         "INSERT INTO users (name, email, password) VALUES (%s, %s, %s) RETURNING id",
         (name, email, hashed)
     )
-    db.commit()
     user_id = cursor.fetchone()["id"]
+    db.commit()
     cursor.close()
 
     session.permanent = True
