@@ -139,11 +139,13 @@ def get_instructions(lang, emergency_type):
     if "user_id" in session:
         try:
             db = get_db()
-            db.execute(
-                "INSERT INTO history (user_id, emergency_type, action, language) VALUES (?, ?, ?, ?)",
+            cursor = db.cursor()
+            cursor.execute(
+                "INSERT INTO history (user_id, emergency_type, action, language) VALUES (%s, %s, %s, %s)",
                 (session["user_id"], emergency_type, "Viewed first aid", lang),
             )
             db.commit()
+            cursor.close()
         except Exception:
             pass
 
