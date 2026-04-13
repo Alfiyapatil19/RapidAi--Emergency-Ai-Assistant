@@ -31,20 +31,22 @@ EMERGENCY_NAMES = {
 # IMAGE GENERATION helper
 # ============================================================
 def _generate_firstaid_image(emergency: str) -> str:
-    """Generate a clean illustration for an emergency."""
+    """Generate a clean illustration for an emergency using Pollinations API (Free, no token needed)."""
     try:
-        from huggingface_hub import InferenceClient
-        client = InferenceClient(api_key=HF_TOKEN)
+        import requests
+        import urllib.parse
         
-        prompt = f"A highly realistic, professional, full-color medical photograph demonstrating clearly: {emergency}. Educational, instructional, high resolution, realistic lighting, safe for work."
+        prompt = f"A clean, simple vector art illustration of first aid for: {emergency}. Medical guide style, instructional, safe for work."
+        encoded_prompt = urllib.parse.quote(prompt)
         
-        # Use FLUX for fast generation
-        image = client.text_to_image(prompt, model="black-forest-labs/FLUX.1-schnell")
+        # Free API, no API key required
+        url = f"https://image.pollinations.ai/prompt/{encoded_prompt}?nologo=true&width=512&height=512"
+        r = requests.get(url, timeout=15)
         
-        buffered = BytesIO()
-        image.save(buffered, format="JPEG")
-        img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
-        return f"data:image/jpeg;base64,{img_str}"
+        if r.status_code == 200:
+            img_str = base64.b64encode(r.content).decode("utf-8")
+            return f"data:image/jpeg;base64,{img_str}"
+        return ""
     except Exception as e:
         logger.error(f"Image gen failed: {e}")
         return ""
