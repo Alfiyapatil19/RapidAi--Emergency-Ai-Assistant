@@ -35,11 +35,11 @@ def register():
     hashed = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
     cursor.execute(
-        "INSERT INTO users (name, email, password) VALUES (%s, %s, %s)",
+        "INSERT INTO users (name, email, password) VALUES (%s, %s, %s) RETURNING id",
         (name, email, hashed)
     )
     db.commit()
-    user_id = cursor.lastrowid
+    user_id = cursor.fetchone()["id"]
     cursor.close()
 
     session.permanent = True

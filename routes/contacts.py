@@ -55,11 +55,11 @@ def add_contact():
         return jsonify({"success": False, "message": "Maximum 10 contacts allowed."}), 400
 
     cursor.execute(
-        "INSERT INTO contacts (user_id, name, relation, phone) VALUES (%s, %s, %s, %s)",
+        "INSERT INTO contacts (user_id, name, relation, phone) VALUES (%s, %s, %s, %s) RETURNING id",
         (session["user_id"], name, relation, phone)
     )
     db.commit()
-    new_id = cursor.lastrowid
+    new_id = cursor.fetchone()["id"]
     cursor.close()
 
     return jsonify({"success": True, "message": "Contact added!", "id": new_id})
