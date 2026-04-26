@@ -46,7 +46,7 @@ def get_history():
             "icon":   ICONS.get(r["emergency_type"], "🆘"),
             "action": r["action"],
             "lang":   r["language"],
-            "time":   str(r["created_at"]),
+            "created_at": (r["created_at"].isoformat() + "Z") if hasattr(r["created_at"], "isoformat") else str(r["created_at"]),
         }
         for r in rows
     ]
