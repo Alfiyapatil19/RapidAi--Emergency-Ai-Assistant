@@ -60,7 +60,7 @@ async function checkAIStatus() {
     const badge = document.querySelector(".ai-badge");
     if (badge) {
       if (state.aiAvailable) {
-        badge.innerHTML = `<span class="ai-dot"></span>AI-Assisted (Gemini)`;
+        badge.innerHTML = `<span class="ai-dot"></span>AI-Assisted (Hugging Face)`;
         badge.style.background = "rgba(34,214,122,0.1)";
         badge.style.color = "var(--green)";
       } else {
