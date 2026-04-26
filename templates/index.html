@@ -315,10 +315,10 @@
 
       <div class="contacts-form-col">
         <div class="col-header">Add New Contact</div>
-        <div class="contacts-form">
+        <form class="contacts-form" onsubmit="event.preventDefault(); addContact();">
           <div class="f-group">
             <label>Full Name <span class="req">*</span></label>
-            <input type="text" id="c-name" placeholder="e.g. Priya Sharma" />
+            <input type="text" id="c-name" placeholder="e.g. Priya Sharma" required />
           </div>
           <div class="f-row">
             <div class="f-group">
@@ -333,18 +333,18 @@
             </div>
             <div class="f-group">
               <label>Phone <span class="req">*</span></label>
-              <input type="tel" id="c-phone" placeholder="+91 98765 43210" />
+              <input type="tel" id="c-phone" placeholder="+91 98765 43210" required />
             </div>
           </div>
-          <button class="btn-add" onclick="addContact()">
+          <button type="submit" class="btn-add" id="btn-add-contact">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Add Contact
+            <span>Add Contact</span>
           </button>
           <div class="f-tip">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
             Up to 10 contacts. All will be notified in panic mode.
           </div>
-        </div>
+        </form>
       </div>
     </div>
   </div><!-- /contacts -->

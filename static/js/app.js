@@ -492,6 +492,25 @@ async function addContact() {
   const rel   = document.getElementById("c-rel").value;
   const phone = document.getElementById("c-phone").value.trim();
   if (!name||!phone) { showToast("⚠️ Name and phone are required"); return; }
+  
+  const btn = document.getElementById("btn-add-contact");
+  const originalText = btn.innerHTML;
+  btn.innerHTML = "<span>Adding...</span>";
+  btn.disabled = true;
+
+  if (state.user === "Demo User") {
+    setTimeout(() => {
+      state.contacts.push({ id: Date.now(), name, relation: rel, phone });
+      document.getElementById("c-name").value  = "";
+      document.getElementById("c-phone").value = "";
+      drawContacts();
+      showToast("✅ Contact added (Demo)!");
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+    }, 500);
+    return;
+  }
+
   try {
     const data = await API.addContact(name, rel, phone);
     if (data.success) {
@@ -505,10 +524,20 @@ async function addContact() {
     }
   } catch(e) {
     showToast("❌ Server error: " + e.message);
+  } finally {
+    btn.innerHTML = originalText;
+    btn.disabled = false;
   }
 }
 
 async function removeContact(id) {
+  if (state.user === "Demo User") {
+    state.contacts = state.contacts.filter(c => c.id !== id);
+    drawContacts();
+    showToast("🗑️ Contact removed (Demo)");
+    return;
+  }
+
   try { 
     const data = await API.deleteContact(id); 
     if (data.success) {
