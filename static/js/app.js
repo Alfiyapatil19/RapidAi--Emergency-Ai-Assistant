@@ -126,7 +126,10 @@ async function loadFirstAid(type) {
   }
 
   if (state.user) {
-    addToHistory({ type, icon: getIcon(type), action:"Viewed first aid", lang:state.lang, time:"Just now" });
+    if (state.user === "Demo User") {
+      addToHistory({ type, icon: getIcon(type), action:"Viewed first aid", lang:state.lang, time:"Just now" });
+    }
+    // Real users will have history automatically logged by the backend API calls below.
   }
 
   // ── TRY REAL CLAUDE AI FIRST ──────────────────────────
@@ -338,7 +341,9 @@ async function confirmPanic() {
         } else {
           showToast(`✅ Real SMS sent to ${data.count} contact(s)!`);
         }
-        addToHistory({ type:"PANIC_MODE", icon:"🚨", action:"Panic triggered — SMS sent", lang:state.lang, time:"Just now" });
+        if (state.user === "Demo User") {
+          addToHistory({ type:"PANIC_MODE", icon:"🚨", action:"Panic triggered — SMS sent", lang:state.lang, time:"Just now" });
+        }
       } else {
         showToast("⚠️ " + (data.message || "SMS failed"));
       }
